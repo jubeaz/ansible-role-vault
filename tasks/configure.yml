@@ -1,0 +1,53 @@
+---
+- name: Create data base dir
+  file: 
+    path: "{{ hvault_data_base_dir }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ _hvault_user }}"
+    group: "{{ _hvault_group }}"
+
+- name: Create data dir
+  file:
+    path: "{{ _hvault_data_dir }}" 
+    state: directory
+    mode: "0755"
+    owner: "{{ _hvault_user }}"
+    group: "{{ _hvault_group }}"
+
+- name: Create config drop-in
+  file:
+    path: /etc/vault.d
+    state: directory
+    mode: "0755"
+    owner: "{{ _hvault_user }}"
+    group: "{{ _hvault_group }}"
+
+- name: Install env
+  file:
+    path: /etc/vault.env
+    owner: "{{ _hvault_user }}"
+    group: "{{ _hvault_group }}"
+    mode: "0644"
+    state: touch
+
+- name: Install vault.service
+  template:
+    src: vault.service.j2
+    dest: /etc/systemd/system/vault.service
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Install config
+  template:
+    src: vault.hcl.j2
+    dest: /etc/vault.hcl
+    owner: "{{ _hvault_user }}"
+    group: "{{ _hvault_group }}"
+    mode: "0644"
+  notify: restart vault
+
+- name: flush_handlers
+  meta: flush_handlers
+

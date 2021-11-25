@@ -1,0 +1,9 @@
+---
+_hvault_data_dir: "{{ hvault_data_base_dir }}/data"
+_hvault_tls_dir: "{{ hvault_data_base_dir }}/tls"
+_hvault_token_dir: "/etc/vault/token"
+_hvault_keys_dir: "/etc/vault/keys"
+_hvault_user: vault
+_hvault_group: vault
+
+  #/usr/lib/systemd/system/vault.service

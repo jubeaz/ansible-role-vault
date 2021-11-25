@@ -1,0 +1,5 @@
+- name: Install vault lastest
+  pacman:
+    name: vault
+    state: present
+    update_cache: true
