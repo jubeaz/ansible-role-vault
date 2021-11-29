@@ -21,7 +21,7 @@ listener "tcp" {
 
 # HTTPS listener
 listener "tcp" {
-  address       = "{{ inventory_hostname }}:{{ hvault_port }}"
+  address       = "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:{{ hvault_port }}"
   tls_cert_file = "{{ hvault_tls_dir }}/{{ hvault_tls_cert }}"  
   tls_key_file  = "{{ hvault_tls_dir }}/{{ hvault_tls_key }}"
 }
