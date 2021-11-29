@@ -1,7 +1,7 @@
 ---
 - name: Create data base dir
-  file: 
-    path: "{{ hvault_data_base_dir }}"
+  file:
+    path: "{{ hvault_data_dir }}"
     state: directory
     mode: "0755"
     owner: "{{ _hvault_user }}"
@@ -9,7 +9,7 @@
 
 - name: Create data dir
   file:
-    path: "{{ _hvault_data_dir }}" 
+    path: "{{ hvault_tls_dir }}"
     state: directory
     mode: "0755"
     owner: "{{ _hvault_user }}"
@@ -38,6 +38,44 @@
     owner: root
     group: root
     mode: "0644"
+
+- name: Stat TLS key
+  stat:
+    path: "{{ hvault_tls_dir }}/{{ hvault_tls_key }}"
+  register: __tls_key
+
+- name: Generate TLS
+  block:
+    - name: create TLS key
+      openssl_privatekey:
+        path: "{{ hvault_tls_dir }}/{{ hvault_tls_key }}"
+        size: 4096
+        state: present
+        owner: "{{ _hvault_user }}"
+        group: "{{ _hvault_group }}"
+    
+    - name: create CSR
+      openssl_csr:
+        path: "{{ hvault_tls_dir }}/{{ hvault_tls_cert }}.csr"
+        privatekey_path: "{{ hvault_tls_dir }}/{{ hvault_tls_key }}"
+        key_usage_critical: true
+        key_usage:
+          - digitalSignature
+          - keyEncipherment
+        basic_constraints_critical: true
+        basic_constraints:
+          - 'CA:FALSE'
+        common_name: "Self Signed Vault"
+        subject_alt_name: "IP:{{ inventory_hostname }}"
+        use_common_name_for_san: false
+    
+    - name: sign CSR
+      openssl_certificate:
+        path: "{{ hvault_tls_dir }}/{{ hvault_tls_cert }}"
+        csr_path: "{{ hvault_tls_dir }}/{{ hvault_tls_cert }}.csr"
+        privatekey_path: "{{ hvault_tls_dir }}/{{ hvault_tls_key }}"
+        provider: selfsigned
+  when: not __tls_key.stat.exists
 
 - name: Install config
   template:

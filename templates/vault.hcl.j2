@@ -5,7 +5,7 @@
 #disable_mlock = true
 
 storage "file" {
-  path = "{{ _hvault_data_dir }}"
+  path = "{{ hvault_data_dir }}"
 }
 
 #storage "consul" {
@@ -16,15 +16,15 @@ storage "file" {
 # default env VAULT_ADDR=http://127.0.0.1:8200
 listener "tcp" {
   tls_disable = 1
-#  address = "127.0.0.1:8200"
+  address = "127.0.0.1:8200"
 }
 
 # HTTPS listener
-#listener "tcp" {
-#  address       = "0.0.0.0:8200"
-#  tls_cert_file = "/opt/vault/tls/tls.crt"
-#  tls_key_file  = "/opt/vault/tls/tls.key"
-#}
+listener "tcp" {
+  address       = "{{ inventory_hostname }}:{{ hvault_port }}"
+  tls_cert_file = "{{ hvault_tls_dir }}/{{ hvault_tls_cert }}"  
+  tls_key_file  = "{{ hvault_tls_dir }}/{{ hvault_tls_key }}"
+}
 
 # Enterprise license_path
 # This will be required for enterprise as of v1.8
