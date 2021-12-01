@@ -6,4 +6,3 @@ hvault_tls_key: self.key
 hvault_tls_cert: self.pem
 hvault_port: 8200
 hvault_ufw_from: 192.168.1.0/24
-  

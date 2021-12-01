@@ -53,7 +53,7 @@
         state: present
         owner: "{{ _hvault_user }}"
         group: "{{ _hvault_group }}"
-    
+
     - name: create CSR
       openssl_csr:
         path: "{{ hvault_tls_dir }}/{{ hvault_tls_cert }}.csr"
@@ -64,11 +64,11 @@
           - keyEncipherment
         basic_constraints_critical: true
         basic_constraints:
-          - 'CA:FALSE'
+          - 'CA:TRUE'
         common_name: "Self Signed Vault"
         subject_alt_name: "IP:{{ inventory_hostname }}"
         use_common_name_for_san: false
-    
+
     - name: sign CSR
       openssl_certificate:
         path: "{{ hvault_tls_dir }}/{{ hvault_tls_cert }}"
@@ -88,4 +88,3 @@
 
 - name: flush_handlers
   meta: flush_handlers
-

@@ -3,4 +3,4 @@
   assert:
     that:
       - ansible_distribution in ['Ubuntu', 'Archlinux']
-    quiet: yes
+    quiet: true

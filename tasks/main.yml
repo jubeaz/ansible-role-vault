@@ -43,7 +43,7 @@
 - name: Try init Vault
   block:
     - name: Initialise Vault operator
-      shell: vault operator init -key-shares=5 -key-threshold=3 -format json
+      command: vault operator init -key-shares=5 -key-threshold=3 -format json
       environment:
         VAULT_ADDR: "http://127.0.0.1:8200"
       register: _vault_init_results
@@ -71,7 +71,7 @@
     - name: Write root token to file
       copy:
         content: "{{ vault_init_parsed.root_token }}"
-        dest: "{{ _hvault_token_dir}}/{{ inventory_hostname }}/rootkey"
+        dest: "{{ _hvault_token_dir }}/{{ inventory_hostname }}/rootkey"
         owner: root
         group: root
         mode: "0600"

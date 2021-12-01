@@ -7,6 +7,5 @@
   include_vars: "arch.yml"
   when: ansible_distribution == "Archlinux"
 
-- name: Include common variables 
+- name: Include common variables
   include_vars: "common.yml"
-
